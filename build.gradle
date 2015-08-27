@@ -9,7 +9,33 @@
 
 // Apply the java plugin to add support for Java
 apply plugin:'application'
-mainClassName = "test.Main"
+mainClassName = 'test.Main'
+
+dependencies {
+    runtime fileTree(dir: 'libs', include: '*.jar')
+}
+
+task maybe(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    println ' classpath: ' + classpath.getAsPath()
+    main = 'test.Main'
+    def arguments = ['-c', '-d', getProject().getBuildDir()]
+    arguments.addAll(sourceSets.main.allJava.getFiles())
+    println ' Java files: ' + sourceSets.main.allJava.getFiles()
+    main = 'edu.buffalo.cse.blue.maybe.Main'
+    args arguments
+}
+
+println ' tasks.maybe.commandLine' + tasks.maybe.commandLine
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        println 'JavaCompile task: ' + it.name
+        options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+    }
+}
+
+tasks.run.dependsOn(maybe)
 
 /*
 // In this section you declare where to find the dependencies of your project
