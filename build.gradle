@@ -12,21 +12,75 @@ apply plugin:'application'
 mainClassName = 'test.Main'
 
 dependencies {
-    runtime fileTree(dir: 'libs', include: '*.jar')
+    compile fileTree(dir: 'libs', include: '*.jar')
 }
 
-task maybe(type: JavaExec) {
-    classpath sourceSets.main.runtimeClasspath
-    println ' classpath: ' + classpath.getAsPath()
-    main = 'test.Main'
-    def arguments = ['-c', '-d', getProject().getBuildDir()]
-    arguments.addAll(sourceSets.main.allJava.getFiles())
-    println ' Java files: ' + sourceSets.main.allJava.getFiles()
+// def classpath = tasks.compileJava.classpath.getAsPath()
+def destinationDir =  tasks.compileJava.destinationDir
+
+task compileJava(type: JavaExec, overwrite: true) {
+// task maybe(type: JavaExec) {
+    classpath fileTree(dir: 'libs', include: '*.jar')
+    // main = 'test.Main'
     main = 'edu.buffalo.cse.blue.maybe.Main'
+    def arguments = ['-d', destinationDir]
+    arguments.addAll(sourceSets.main.allJava.getFiles())
+    println 'maybe'
+    println ' Java files: ' + sourceSets.main.allJava.getFiles()
     args arguments
 }
 
-println ' tasks.maybe.commandLine' + tasks.maybe.commandLine
+// tasks.run.dependsOn + compileJava
+
+task a << {
+    println 'task a'
+}
+
+task b(dependsOn: a) << {
+// task b << {
+    println 'task b'
+}
+
+compileJava.doFirst {
+    println 'compileJava doFirst'
+}
+
+compileJava.doLast {
+    println 'compileJava doFirst'
+}
+
+classes.dependsOn {
+    tasks.findAll { task -> task.name.equals('compileJava') }
+}
+
+run.dependsOn {
+    tasks.findAll { task -> task.name.equals('compileJava') }
+}
+
+b.dependsOn {
+    tasks.findAll { task -> task.name.equals('a') }
+}
+
+println tasks.b.dependsOn
+// b.dependsOn.remove("a")
+
+task a(overwrite: true) << {
+    println 'overwrite task a'
+}
+
+
+// task maybe(type: JavaExec) {
+//     classpath sourceSets.main.runtimeClasspath
+//     println ' classpath: ' + classpath.getAsPath()
+//     main = 'test.Main'
+//     def arguments = ['-c', '-d', getProject().getBuildDir()]
+//     arguments.addAll(sourceSets.main.allJava.getFiles())
+//     println ' Java files: ' + sourceSets.main.allJava.getFiles()
+//     main = 'edu.buffalo.cse.blue.maybe.Main'
+//     args arguments
+// }
+
+// println ' tasks.maybe.commandLine' + tasks.maybe.commandLine
 
 gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
@@ -34,8 +88,6 @@ gradle.projectsEvaluated {
         options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
     }
 }
-
-tasks.run.dependsOn(maybe)
 
 /*
 // In this section you declare where to find the dependencies of your project

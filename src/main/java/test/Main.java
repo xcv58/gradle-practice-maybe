@@ -7,7 +7,9 @@ public class Main {
         // HashMap<String, String> map1 = new HashMap<String, String>();
         // HashMap<String, String> map2 = new HashMap();
         // map2 = map1;
-        // int a = maybe ("abc") { 1, 2, 3};
+        int a = 1;
+        a = maybe ("abc") { 1, 2, 3};
+        System.out.println("a: " + a);
 
         TreeNode root = new TreeNode();
         System.out.println(root.val);
