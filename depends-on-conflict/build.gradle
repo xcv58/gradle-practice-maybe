@@ -2,9 +2,9 @@ task a << {
     println 'task a'
 }
 
-// task b(dependsOn: {a}) << { // works
+task b(dependsOn: {a}) << { // works
 // task b(dependsOn: 'a') << { // works
-task b(dependsOn: [a]) << { // doesn't work
+// task b(dependsOn: [a]) << { // doesn't work
 // task b(dependsOn: a) << { // doesn't work
 // task b << {
     println 'task b'
