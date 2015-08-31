@@ -1,12 +1,15 @@
 package test;
 
 import java.util.*;
+import com.google.gson.*;
 
 public class Main {
     public static void main(String[] args) {
         // HashMap<String, String> map1 = new HashMap<String, String>();
         // HashMap<String, String> map2 = new HashMap();
         // map2 = map1;
+        Gson gson = new Gson();
+        System.out.println("gson: " + gson);
         int a = 1;
         a = maybe ("abc") { 1, 2, 3};
         System.out.println("a: " + a);
