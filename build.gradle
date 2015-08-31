@@ -17,16 +17,19 @@ dependencies {
 
 // def classpath = tasks.compileJava.classpath.getAsPath()
 def destinationDir =  tasks.compileJava.destinationDir
+def javaSources = sourceSets.main.allJava.getFiles()
 
 task compileJava(type: JavaExec, overwrite: true) {
+    inputs.file javaSources
+    outputs.dir destinationDir
 // task maybe(type: JavaExec) {
     classpath fileTree(dir: 'libs', include: '*.jar')
     // main = 'test.Main'
     main = 'edu.buffalo.cse.blue.maybe.Main'
     def arguments = ['-d', destinationDir]
-    arguments.addAll(sourceSets.main.allJava.getFiles())
+    arguments.addAll(javaSources)
     println 'maybe'
-    println ' Java files: ' + sourceSets.main.allJava.getFiles()
+    println ' Java files: ' + javaSources
     args arguments
 }
 
