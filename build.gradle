@@ -22,15 +22,6 @@ task compileJava(type: JavaExec, overwrite: true) {
     args arguments
 }
 
-task a << {
-    println 'task a'
-}
-
-task b(dependsOn: a) << {
-// task b << {
-    println 'task b'
-}
-
 compileJava.doFirst {
     println 'compileJava doFirst'
 }
@@ -45,14 +36,6 @@ classes.dependsOn {
 
 run.dependsOn {
     tasks.findAll { task -> task.name.equals('compileJava') }
-}
-
-b.dependsOn {
-    tasks.findAll { task -> task.name.equals('a') }
-}
-
-task a(overwrite: true) << {
-    println 'overwrite task a'
 }
 
 gradle.projectsEvaluated {

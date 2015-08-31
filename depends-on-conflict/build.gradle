@@ -1,0 +1,25 @@
+task a << {
+    println 'task a'
+}
+
+task b(dependsOn: a) << {
+// task b << {
+    println 'task b'
+}
+
+b.dependsOn {
+    tasks.a
+}
+
+tasks.create(name: 'a', overwrite: true) {
+    doLast {
+        println 'overwrite task a'
+    }
+}
+
+gradle.projectsEvaluated {
+    // tasks.withType(JavaCompile) {
+    //     println 'JavaCompile task: ' + it.name
+    //     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+    // }
+}
