@@ -2,7 +2,6 @@ apply plugin:'application'
 mainClassName = 'test.Main'
 
 repositories {
-    //central maven repo
     mavenCentral()
 }
 
@@ -10,39 +9,9 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'org.apache.httpcomponents:httpcore:4.4.1'
     compile 'org.apache.httpcomponents:httpclient:4.5'
-    // maybe fileTree(dir: 'libs-maybe', include: '*.jar')
 }
 
-// def classpath = tasks.compileJava.classpath.getAsPath()
-// def destinationDir =  tasks.compileJava.destinationDir
-// def javaSources = sourceSets.main.allJava.getFiles()
-
-// task compileJava(type: JavaExec, overwrite: true) {
-//     inputs.file javaSources
-//     outputs.dir destinationDir
-//     classpath fileTree(dir: 'libs', include: '*.jar')
-//     // main = 'test.Main'
-//     main = 'edu.buffalo.cse.blue.maybe.Main'
-//     def arguments = ['-d', destinationDir]
-//     arguments.addAll(javaSources)
-//     println 'maybe'
-//     println ' Java files: ' + javaSources
-//     args arguments
-// }
-
-compileJava.doFirst {
-    println 'compileJava doFirst'
-}
-
-compileJava.doLast {
-    println 'compileJava doFirst'
-}
-
-classes.dependsOn {
-    tasks.findAll { task -> task.name.equals('compileJava') }
-}
-
-run.dependsOn {
+tasks.classes.dependsOn {
     tasks.findAll { task -> task.name.equals('compileJava') }
 }
 
@@ -52,31 +21,23 @@ gradle.projectsEvaluated {
         task ->
         println '!!' + task
         println '!!' + task.name
-        println task.classpath.getClass()
-        task.classpath.each {
-            file -> println file
-        }
-        // def sourceFile = task.getInputs().getSourceFiles()
         tasks.create(name: task.name, type: JavaExec, overwrite: true) {
-            // inputs.file task.source
-            // outputs.dir task.destinationDir
+            inputs.file task.source
+            outputs.dir task.destinationDir
             classpath fileTree(dir: 'libs-maybe', include: '*.jar')
-            // classpath maybe
-            // main = 'test.Main'
             main = 'edu.buffalo.cse.blue.maybe.Main'
             def arguments = ['-d', task.destinationDir]
             task.classpath.each {
-                path ->
-                arguments.add('-classpath')
-                arguments.add(path)
+                path -> arguments.addAll(['-classpath', path])
             }
             task.source.each { file -> arguments.add(file) }
             // arguments.addAll(task.source)
             args arguments
-            println arguments
+            // println arguments
         }
     }
     tasks.withType(JavaCompile) {
+        // TODO: process options
         println 'JavaCompile task: ' + it.name
         options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
     }
