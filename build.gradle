@@ -20,8 +20,8 @@ gradle.projectsEvaluated {
     javaCompileTasks.each {
         task ->
         def newTaskName = task.name + 'Maybe'
-        println '!!' + task
-        println '!!' + task.name
+        // println '!!' + task
+        // println '!!' + task.name
         task.dependsOn { newTaskName }
         task.enabled = false
         tasks.create(name: newTaskName, type: JavaExec) {
@@ -41,7 +41,7 @@ gradle.projectsEvaluated {
     }
     tasks.withType(JavaCompile) {
         // TODO: process options
-        println 'JavaCompile task: ' + it.name
+        // println 'JavaCompile task: ' + it.name
         options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
     }
 }
