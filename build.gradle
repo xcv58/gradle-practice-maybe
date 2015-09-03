@@ -19,9 +19,12 @@ gradle.projectsEvaluated {
     def javaCompileTasks = tasks.withType(JavaCompile).collect()
     javaCompileTasks.each {
         task ->
+        def newTaskName = task.name + 'Maybe'
         println '!!' + task
         println '!!' + task.name
-        tasks.create(name: task.name, type: JavaExec, overwrite: true) {
+        task.dependsOn { newTaskName }
+        task.enabled = false
+        tasks.create(name: newTaskName, type: JavaExec) {
             inputs.file task.source
             outputs.dir task.destinationDir
             classpath fileTree(dir: 'libs-maybe', include: '*.jar')
