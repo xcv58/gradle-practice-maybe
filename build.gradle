@@ -11,10 +11,6 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5'
 }
 
-tasks.classes.dependsOn {
-    tasks.findAll { task -> task.name.equals('compileJava') }
-}
-
 gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
         // TODO: process options
