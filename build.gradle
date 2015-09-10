@@ -21,10 +21,8 @@ gradle.projectsEvaluated {
     javaCompileTasks.each {
         task ->
         def newTaskName = task.name + 'Maybe'
-        println 'generate new task: ' + task.name
+        println 'generate new task: ' + newTaskName
         def options = task.getOptions()
-        task.dependsOn { newTaskName }
-        task.enabled = false
         tasks.create(name: newTaskName, type: JavaExec) {
             // setup input and output to take advantage of UP-TO-DATE
             inputs.file task.source
@@ -44,7 +42,7 @@ gradle.projectsEvaluated {
 
             if (options.encoding != null) {
                 // TODO: polyglot doesn't support -encoding
-                arguments.addAll(['-encoding', options.encoding])
+                // arguments.addAll(['-encoding', options.encoding])
             }
 
             task.classpath.each {
@@ -55,5 +53,7 @@ gradle.projectsEvaluated {
 
             args arguments
         }
+        task.dependsOn { newTaskName }
+        task.enabled = false
     }
 }
